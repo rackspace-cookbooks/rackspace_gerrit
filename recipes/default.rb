@@ -27,11 +27,10 @@ group node['gerrit']['group']
 user node['gerrit']['user'] do
   gid node['gerrit']['group']
   home node['gerrit']['home']
-  comment "Gerrit system user"
-  shell "/bin/bash"
+  comment 'Gerrit system user'
+  shell '/bin/bash'
   system true
 end
-
 
 ####################################
 # Directories & Files
@@ -39,11 +38,11 @@ end
 
 dirs = [
   node['gerrit']['home'],
-  node['gerrit']['home'] + "/war",
+  node['gerrit']['home'] + '/war',
   node['gerrit']['install_dir'],
-  node['gerrit']['install_dir'] + "/etc",
-  node['gerrit']['install_dir'] + "/lib", 
-  node['gerrit']['install_dir'] + "/static"
+  node['gerrit']['install_dir'] + '/etc',
+  node['gerrit']['install_dir'] + '/lib',
+  node['gerrit']['install_dir'] + '/static'
 ]
 
 dirs.each do |dir|
@@ -54,32 +53,31 @@ dirs.each do |dir|
   end
 end
 
-
-%w{
+%w(
   gerrit.config
   replication.config
-}.each do |file|
+).each do |file|
   template "#{node['gerrit']['install_dir']}/etc/#{file}" do
     source "gerrit/#{file}"
     owner node['gerrit']['user']
     group node['gerrit']['group']
     mode 0644
-    notifies :restart, "service[gerrit]"
+    notifies :restart, 'service[gerrit]'
   end
 end
 
 template "#{node['gerrit']['install_dir']}/etc/secure.config" do
-  source "gerrit/secure.config.erb"
+  source 'gerrit/secure.config.erb'
   owner node['gerrit']['user']
   group node['gerrit']['group']
   mode 0600
-  notifies :restart, "service[gerrit]"
+  notifies :restart, 'service[gerrit]'
 end
 
-template "/etc/default/gerritcodereview" do
-  source "system/default.gerritcodereview.erb"
+template '/etc/default/gerritcodereview' do
+  source 'system/default.gerritcodereview.erb'
   mode 0644
-  notifies :restart, "service[gerrit]"
+  notifies :restart, 'service[gerrit]'
 end
 
 node['gerrit']['theme']['compile_files'].each do |file|
@@ -92,8 +90,8 @@ node['gerrit']['theme']['compile_files'].each do |file|
 end
 
 node['gerrit']['theme']['static_files'].each do |file|
-  cookbook_file node['gerrit']['install_dir'] + "/static/" + file do
-    source "gerrit/static/" + file
+  cookbook_file node['gerrit']['install_dir'] + '/static/' + file do
+    source 'gerrit/static/' + file
     owner node['gerrit']['user']
     group node['gerrit']['group']
   end
@@ -103,89 +101,80 @@ end
 # MySQL
 ####################################
 
-if node['gerrit']['database']['type'] == "MYSQL"
-  include_recipe "gerrit::mysql"
-end
-
-
+include_recipe 'gerrit::mysql' if node['gerrit']['database']['type'] == 'MYSQL'
 
 ####################################
 # Proxy
 ####################################
 
-if node['gerrit']['proxy']
-  include_recipe "gerrit::proxy"
-end
+include_recipe 'gerrit::proxy' if node['gerrit']['proxy']
 
 ####################################
 # Java
 ####################################
-if platform?("ubuntu")
-  package "openjdk-6-jre-headless"
+if platform?('ubuntu')
+  package 'openjdk-6-jre-headless'
 else
-  include_recipe "java"
+  include_recipe 'java'
 end
-
 
 ####################################
 # Deploy
 ####################################
 
-include_recipe "java"
-include_recipe "git"
+include_recipe 'java'
+include_recipe 'git'
 
-#directory "#{node['gerrit']['home']}/war" do
+# directory "#{node['gerrit']['home']}/war" do
 #  owner node['gerrit']['user']
 #  group node['gerrit']['group']
-#end
+# end
 
-if node['gerrit']['flavor'] == "war"
+if node['gerrit']['flavor'] == 'war'
   filename = "#{node['gerrit']['home']}/war/gerrit-#{node['gerrit']['version']}.war"
 
   remote_file filename do
     owner node['gerrit']['user']
     source node['gerrit']['war']['download_url']
     # checksum node['gerrit']['war']['checksum'][node['gerrit']['version']]
-    notifies :run, "bash[gerrit-init]", :immediately
+    notifies :run, 'bash[gerrit-init]', :immediately
     action :create_if_missing
   end
 else
-  include_recipe "gerrit::source"
-  
+  include_recipe 'gerrit::source'
+
   filename = "#{node['gerrit']['home']}/war/gerrit-#{node['gerrit']['version']}-#{node['gerrit']['source']['reference']}.war"
 
-  bash "copy war" do
-    Chef::Log.info "Created " + filename
+  bash 'copy war' do
+    Chef::Log.info 'Created ' + filename
     user node['gerrit']['user']
     code "cp #{node['gerrit']['home']}/src/git/gerrit-war/target/gerrit-*.war #{filename}"
-    notifies :run, "bash[gerrit-init]", :immediately
+    notifies :run, 'bash[gerrit-init]', :immediately
     creates filename
   end
 end
 
-bash "gerrit-init" do
+bash 'gerrit-init' do
   user node['gerrit']['user']
   group node['gerrit']['group']
   cwd "#{node['gerrit']['home']}/war"
   code "java -jar #{filename} init --batch --no-auto-start -d #{node['gerrit']['install_dir']}"
   action :nothing
-  notifies :restart, "service[gerrit]"
+  notifies :restart, 'service[gerrit]'
 end
 
-link "/etc/init.d/gerrit" do
+link '/etc/init.d/gerrit' do
   to "#{node['gerrit']['install_dir']}/bin/gerrit.sh"
 end
 
-link "/etc/rc3.d/S90gerrit" do
-  to "../init.d/gerrit"
+link '/etc/rc3.d/S90gerrit' do
+  to '../init.d/gerrit'
 end
 
-service "gerrit" do
+service 'gerrit' do
   supports :status => false, :restart => true, :reload => true
-  action [ :enable, :start ]
+  action [:enable, :start]
 end
-
-
 
 ####################################
 # Cron-Job
@@ -196,26 +185,22 @@ directory "#{node['gerrit']['home']}/scripts" do
 end
 
 template "#{node['gerrit']['home']}/scripts/repack-repositories.sh" do
-  source "scripts/repack-repositories.sh.erb"
+  source 'scripts/repack-repositories.sh.erb'
   owner node['gerrit']['user']
   group node['gerrit']['group']
   mode 0744
 end
 
-cron "repack-repositories" do
-  hour "2"
-  minute "0"
-  weekday "0"
+cron 'repack-repositories' do
+  hour '2'
+  minute '0'
+  weekday '0'
   command "#{node['gerrit']['home']}/scripts/repack-repositories.sh"
   user node['gerrit']['user']
 end
-
 
 ####################################
 # peer_keys
 ####################################
 
-if node['gerrit']['peer_keys']['enabled']
-  include_recipe "gerrit::peer_keys"
-end
-
+include_recipe 'gerrit::peer_keys' if node['gerrit']['peer_keys']['enabled']

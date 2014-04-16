@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-include_recipe "maven"
+include_recipe 'maven'
 
 directory "#{node['gerrit']['home']}/src/git" do
   owner node['gerrit']['user']
@@ -26,27 +26,27 @@ directory "#{node['gerrit']['home']}/src/git" do
   recursive true
 end
 
-git "gerrit-repo" do
-  destination "#{node['gerrit']['home']}/src/git" 
+git 'gerrit-repo' do
+  destination "#{node['gerrit']['home']}/src/git"
   repository node['gerrit']['source']['repository']
   reference node['gerrit']['source']['reference']
   user node['gerrit']['user']
   group node['gerrit']['group']
-  notifies :run, "execute[clean-repo]", :immediately
-  notifies :run, "execute[release-gerrit]", :immediately
+  notifies :run, 'execute[clean-repo]', :immediately
+  notifies :run, 'execute[release-gerrit]', :immediately
 end
 
-execute "clean-repo" do
+execute 'clean-repo' do
   cwd "#{node['gerrit']['home']}/src/git"
   user node['gerrit']['user']
-  command "git ls-files --others --exclude-standard"
+  command 'git ls-files --others --exclude-standard'
   action :nothing
 end
 
-execute "release-gerrit" do
-  Chef::Log.info "Compiling Gerrit. This will take a long time!"
+execute 'release-gerrit' do
+  Chef::Log.info 'Compiling Gerrit. This will take a long time!'
   cwd "#{node['gerrit']['home']}/src/git"
   user node['gerrit']['user']
-  command "tools/release.sh"
+  command 'tools/release.sh'
   action :nothing
 end

@@ -18,8 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-ssh_key_filename = "id_rsa-gerrit-code-review"
-ssh_key = node['gerrit']['home'] + "/.ssh/" + ssh_key_filename
+ssh_key_filename = 'id_rsa-gerrit-code-review'
+ssh_key = node['gerrit']['home'] + '/.ssh/' + ssh_key_filename
 public_key = node['gerrit']['peer_keys']['public']
 private_key = node['gerrit']['peer_keys']['private']
 
@@ -28,36 +28,36 @@ execute "generate private ssh key for 'Gerrit Code Review' user" do
   user node['gerrit']['user']
   group node['gerrit']['group']
   creates ssh_key
-  only_if { public_key.to_s == "" }
+  only_if { public_key.to_s == '' }
 end
 
-ruby_block "save keys to attributes" do
-  only_if { public_key.to_s == "" }
+ruby_block 'save keys to attributes' do
+  only_if { public_key.to_s == '' }
   block do
     private_key = File.read(ssh_key)
-    public_key = File.read(ssh_key + ".pub")
+    public_key = File.read(ssh_key + '.pub')
     node.set['gerrit']['peer_keys']['private'] = private_key
     node.set['gerrit']['peer_keys']['public'] = public_key
   end
 end
 
-file node['gerrit']['install_dir'] + "/etc/peer_keys" do
-  content public_key.split(" ").slice(1)
+file node['gerrit']['install_dir'] + '/etc/peer_keys' do
+  content public_key.split(' ').slice(1)
   owner node['gerrit']['user']
   group node['gerrit']['user']
-  only_if { public_key.to_s != "" }
+  only_if { public_key.to_s != '' }
 end
 
 file ssh_key do
-  content = node['gerrit']['peer_keys']['private']
+#  content = node['gerrit']['peer_keys']['private']
   owner node['gerrit']['user']
   group node['gerrit']['group']
   mode 0600
-  only_if { ssh_key != "" }
+  only_if { ssh_key != '' }
 end
 
-file ssh_key + ".pub" do
-  content = node['gerrit']['peer_keys']['public']
+file ssh_key + '.pub' do
+#  content = node['gerrit']['peer_keys']['public']
   owner node['gerrit']['user']
   group node['gerrit']['group']
   mode 0644

@@ -18,22 +18,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-default['gerrit']['flavor'] = "war"
+default['gerrit']['flavor'] = 'war'
 
-default['gerrit']['version'] = "2.6.1"
+default['gerrit']['version'] = '2.6.1'
 
 default['gerrit']['war']['download_url'] = "http://gerrit-releases.storage.googleapis.com/gerrit-#{node['gerrit']['version']}.war"
 
-default['gerrit']['source']['repository'] = "https://gerrit.googlesource.com/gerrit"
+default['gerrit']['source']['repository'] = 'https://gerrit.googlesource.com/gerrit'
 
-default['gerrit']['user'] = "gerrit"
-default['gerrit']['group'] = "gerrit"
-default['gerrit']['home'] = "/var/gerrit"
+default['gerrit']['user'] = 'gerrit'
+default['gerrit']['group'] = 'gerrit'
+default['gerrit']['home'] = '/var/gerrit'
 default['gerrit']['install_dir'] = "#{node['gerrit']['home']}/review"
 
 default['gerrit']['hostname'] = node['fqdn']
 default['gerrit']['canonicalWebUrl'] = "http://#{node['gerrit']['hostname']}/"
-default['gerrit']['port'] = "29418"
+default['gerrit']['port'] = '29418'
 default['gerrit']['proxy'] = true
 default['gerrit']['canonicalGitUrl'] = nil
 
@@ -43,17 +43,16 @@ default['gerrit']['canonicalGitUrl'] = nil
 default['gerrit']['ssl'] = false
 default['gerrit']['ssl_certificate'] = nil
 
-
-override['mysql']['bind_address'] = "127.0.0.1"
-default['gerrit']['database']['type'] = "MYSQL"
-default['gerrit']['database']['host'] = "localhost"
-default['gerrit']['database']['name'] = "gerrit"
-default['gerrit']['database']['username'] = "gerrit"
-default['gerrit']['database']['password'] = "gerrit"
+override['mysql']['bind_address'] = '127.0.0.1'
+default['gerrit']['database']['type'] = 'MYSQL'
+default['gerrit']['database']['host'] = 'localhost'
+default['gerrit']['database']['name'] = 'gerrit'
+default['gerrit']['database']['username'] = 'gerrit'
+default['gerrit']['database']['password'] = 'gerrit'
 
 default['gerrit']['theme']['compile_files'] = []
 default['gerrit']['theme']['static_files'] = []
 
 default['gerrit']['peer_keys']['enabled'] = false
-default['gerrit']['peer_keys']['public'] = ""
-default['gerrit']['peer_keys']['private'] = ""
+default['gerrit']['peer_keys']['public'] = ''
+default['gerrit']['peer_keys']['private'] = ''
