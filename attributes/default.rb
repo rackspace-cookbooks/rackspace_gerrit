@@ -32,7 +32,8 @@ default['gerrit']['home'] = '/var/gerrit'
 default['gerrit']['install_dir'] = "#{node['gerrit']['home']}/review"
 
 default['gerrit']['hostname'] = node['ipaddress']
-default['gerrit']['canonicalWebUrl'] = "http://#{node['gerrit']['hostname']}:8080/"
+default['gerrit']['canonicalWebUrl'] = "http://#{node['gerrit']['hostname']}"
+default['gerrit']['urlport'] = '8080'
 default['gerrit']['port'] = '29418'
 default['gerrit']['proxy'] = true
 default['gerrit']['canonicalGitUrl'] = nil
