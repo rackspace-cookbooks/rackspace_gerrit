@@ -101,13 +101,13 @@ end
 # MySQL
 ####################################
 
-include_recipe 'gerrit::mysql' if node['gerrit']['database']['type'] == 'MYSQL'
+include_recipe 'rackspace_gerrit::mysql' if node['gerrit']['database']['type'] == 'MYSQL'
 
 ####################################
 # Proxy
 ####################################
 
-include_recipe 'gerrit::proxy' if node['gerrit']['proxy']
+include_recipe 'rackspace_gerrit::proxy' if node['gerrit']['proxy']
 
 ####################################
 # Java
@@ -115,14 +115,14 @@ include_recipe 'gerrit::proxy' if node['gerrit']['proxy']
 if platform?('ubuntu')
   package 'openjdk-6-jre-headless'
 else
-  include_recipe 'java'
+  include_recipe 'rackspace_java'
 end
 
 ####################################
 # Deploy
 ####################################
 
-include_recipe 'java'
+include_recipe 'rackspace_java'
 include_recipe 'git'
 
 # directory "#{node['gerrit']['home']}/war" do
@@ -141,7 +141,7 @@ if node['gerrit']['flavor'] == 'war'
     action :create_if_missing
   end
 else
-  include_recipe 'gerrit::source'
+  include_recipe 'rackspace_gerrit::source'
 
   filename = "#{node['gerrit']['home']}/war/gerrit-#{node['gerrit']['version']}-#{node['gerrit']['source']['reference']}.war"
 
@@ -203,4 +203,4 @@ end
 # peer_keys
 ####################################
 
-include_recipe 'gerrit::peer_keys' if node['gerrit']['peer_keys']['enabled']
+include_recipe 'rackspace_gerrit::peer_keys' if node['gerrit']['peer_keys']['enabled']

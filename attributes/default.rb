@@ -20,7 +20,7 @@
 
 default['gerrit']['flavor'] = 'war'
 
-default['gerrit']['version'] = '2.6.1'
+default['gerrit']['version'] = '2.8'
 
 default['gerrit']['war']['download_url'] = "http://gerrit-releases.storage.googleapis.com/gerrit-#{node['gerrit']['version']}.war"
 
@@ -31,8 +31,8 @@ default['gerrit']['group'] = 'gerrit'
 default['gerrit']['home'] = '/var/gerrit'
 default['gerrit']['install_dir'] = "#{node['gerrit']['home']}/review"
 
-default['gerrit']['hostname'] = node['fqdn']
-default['gerrit']['canonicalWebUrl'] = "http://#{node['gerrit']['hostname']}/"
+default['gerrit']['hostname'] = node['ipaddress']
+default['gerrit']['canonicalWebUrl'] = "http://#{node['gerrit']['hostname']}:8080/"
 default['gerrit']['port'] = '29418'
 default['gerrit']['proxy'] = true
 default['gerrit']['canonicalGitUrl'] = nil
@@ -43,7 +43,7 @@ default['gerrit']['canonicalGitUrl'] = nil
 default['gerrit']['ssl'] = false
 default['gerrit']['ssl_certificate'] = nil
 
-override['mysql']['bind_address'] = '127.0.0.1'
+override['rackspace_mysql']['bind_address'] = '127.0.0.1'
 default['gerrit']['database']['type'] = 'MYSQL'
 default['gerrit']['database']['host'] = 'localhost'
 default['gerrit']['database']['name'] = 'gerrit'
@@ -53,6 +53,6 @@ default['gerrit']['database']['password'] = 'gerrit'
 default['gerrit']['theme']['compile_files'] = []
 default['gerrit']['theme']['static_files'] = []
 
-default['gerrit']['peer_keys']['enabled'] = false
+default['gerrit']['peer_keys']['enabled'] = true
 default['gerrit']['peer_keys']['public'] = ''
 default['gerrit']['peer_keys']['private'] = ''

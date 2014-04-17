@@ -18,10 +18,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-include_recipe 'build-essential'
-include_recipe 'mysql'
-include_recipe 'mysql::server'
-include_recipe 'database::mysql'
+include_recipe 'rackspace_build_essential'
+include_recipe 'rackspace_mysql'
+include_recipe 'rackspace_mysql::server'
+include_recipe 'rackspace_database::mysql'
 
 # package "libmysql-java"
 
@@ -33,9 +33,9 @@ remote_file "#{node['gerrit']['install_dir']}/lib/mysql-connector-java-5.1.10.ja
 end
 
 mysql_connection_info = {
-  :host =>  node['mysql']['bind_address'],
+  :host =>  node['rackspace_mysql']['bind_address'],
   :username => 'root',
-  :password => node['mysql']['server_root_password']
+  :password => node['rackspace_mysql']['server_root_password']
 }
 
 ###### this all doesn't work well, because Mysql.new tries to connect to MySQL which isn't running, yet..
@@ -53,25 +53,25 @@ mysql_connection_info = {
 #  m = Mysql.new("localhost", "root", node['mysql']['server_root_password'])
 #  if m.list_dbs.include?(node['gerrit']['database']['name']) == false
 
-mysql_database node['gerrit']['database']['name'] do
+rackspace_mysql_database node['gerrit']['database']['name'] do
   connection mysql_connection_info
   action :create
 end
 
-mysql_database 'changing the charset of database' do
+rackspace_mysql_database 'changing the charset of database' do
   connection mysql_connection_info
   database_name node['gerrit']['database']['name']
   action :query
   sql "ALTER DATABASE #{node['gerrit']['database']['name']} charset=latin1"
 end
 
-mysql_database_user node['gerrit']['database']['username'] do
+rackspace_mysql_database_user node['gerrit']['database']['username'] do
   connection mysql_connection_info
   password node['gerrit']['database']['password']
   action :create
 end
 
-mysql_database_user node['gerrit']['database']['username'] do
+rackspace_mysql_database_user node['gerrit']['database']['username'] do
   connection mysql_connection_info
   database_name node['gerrit']['database']['name']
   privileges [
@@ -80,7 +80,7 @@ mysql_database_user node['gerrit']['database']['username'] do
   action :grant
 end
 
-mysql_database 'flushing mysql privileges' do
+rackspace_mysql_database 'flushing mysql privileges' do
   connection mysql_connection_info
   action :query
   sql 'FLUSH PRIVILEGES'

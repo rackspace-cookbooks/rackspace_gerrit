@@ -1,6 +1,5 @@
 <VirtualHost *:<%= node['gerrit']['ssl'] ? '443' : '80' %>>
   ServerName <%= @params[:server_name] %>
-  ServerAlias <% @params[:server_aliases].each do |a| %><%= "#{a}" %> <% end %>
   DocumentRoot <%= @params[:docroot] %>
  
   <% if node['gerrit']['ssl'] %>
@@ -11,8 +10,8 @@
   <% end %>
   
   LogLevel info
-  ErrorLog <%= node[:apache][:log_dir] %>/<%= @params[:name] %>-error.log
-  CustomLog <%= node[:apache][:log_dir] %>/<%= @params[:name] %>-access.log combined
+  ErrorLog <%= node[:rackspace_apache][:log_dir] %>/<%= @params[:name] %>-error.log
+  CustomLog <%= node[:rackspace_apache][:log_dir] %>/<%= @params[:name] %>-access.log combined
 
   ProxyRequests Off
   ProxyVia Off
@@ -30,7 +29,6 @@
 <% if node['gerrit']['ssl'] %>
 <VirtualHost *:80>
   ServerName <%= @params[:server_name] %>
-  ServerAlias <% @params[:server_aliases].each do |a| %><%= "#{a}" %> <% end %>
 
   RewriteEngine On
   RewriteRule (.*) https://%{HTTP_HOST}$1

@@ -18,16 +18,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-include_recipe 'apache2'
-include_recipe 'apache2::mod_proxy'
-include_recipe 'apache2::mod_proxy_http'
+include_recipe 'rackspace_apache'
 
 apache_site 'default' do
   enable false
 end
+apache_module 'proxy_http' do
+  enable true
+end
 
 if node['gerrit']['ssl']
-  include_recipe 'apache2::mod_ssl'
+  include_recipe 'rackspace_apache::mod_ssl'
 
   ssl_certfile_path = '/etc/ssl/certs/ssl-cert-snakeoil.pem'
   ssl_keyfile_path  = '/etc/ssl/certs/ssl-cert-snakeoil.key'
@@ -42,7 +43,7 @@ end
 
 web_app node['gerrit']['hostname'] do
   server_name node['gerrit']['hostname']
-  server_aliases []
+ # server_aliases node['gerrit']['server_aliases']
   docroot '/var/www'
   template 'apache/web_app.conf.erb'
   ssl_certfile ssl_certfile_path
