@@ -26,7 +26,7 @@
      AuthType Basic
      AuthName "Gerrit Code Review"
      Require valid-user
-     AuthUserFile  node['gerrit']['home']/review/etc/gerritpass
+     AuthUserFile  <%= node['gerrit']['home'] %>/review/etc/gerritpass
   </location>
 
   AllowEncodedSlashes On

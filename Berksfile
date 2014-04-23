@@ -14,6 +14,7 @@ cookbook 'monit', git: 'git://github.com/apsoto/monit.git'
 cookbook 'rackspace_postgresql', github: 'rackspace-cookbooks/rackspace_postgresql'
 cookbook 'rackspace_logrotate', github: 'rackspace-cookbooks/rackspace_logrotate'
 cookbook 'rackspace_php', github: 'rackspace-cookbooks/rackspace_php'
+cookbook 'rackspace_htpasswd', github: 'rackspace-cookbooks/rackspace_htpasswd'
 
 group :integration do
   cookbook 'minitest-handler', git: 'git://github.com/btm/minitest-handler-cookbook.git'

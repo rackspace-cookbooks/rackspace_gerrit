@@ -204,11 +204,3 @@ end
 ####################################
 
 include_recipe 'rackspace_gerrit::peer_keys' if node['gerrit']['peer_keys']['enabled']
-
-# Authentication
-template "#{node['gerrit']['home']}/review/etc/gerritpass" do
-  source 'gerrit/gerritpass'
-  owner node['gerrit']['user']
-  group node['gerrit']['group']
-  mode 0744
-end
