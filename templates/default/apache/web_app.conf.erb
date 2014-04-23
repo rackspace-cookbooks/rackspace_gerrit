@@ -22,8 +22,19 @@
     Allow from all
   </Proxy>
 
+  <location /login/>
+     AuthType Basic
+     AuthName "Gerrit Code Review"
+     Require valid-user
+     AuthUserFile  node['gerrit']['home']/review/etc/gerritpass
+  </location>
+
   AllowEncodedSlashes On
   ProxyPass        /   http://localhost:8080/ nocanon
+  ProxyPassReverse / http://localhost:8080/
+  
+  RewriteEngine on
+  RewriteRule .* - [E=SM_USER:%{LA-U:REMOTE_USER}]
 </VirtualHost>
 
 <% if node['gerrit']['ssl'] %>
