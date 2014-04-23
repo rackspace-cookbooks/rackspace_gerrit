@@ -31,7 +31,7 @@ template "#{node['gerrit']['home']}/review/etc/gerritpass" do
 end
 include_recipe 'rackspace_htpasswd'
 
-htpasswd "#{node['gerrit']['home']}/review/etc/gerritpass" do
+rackspace_htpasswd "#{node['gerrit']['home']}/review/etc/gerritpass" do
   user "jose"
   password "jose"
 end
