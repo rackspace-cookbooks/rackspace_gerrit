@@ -4,9 +4,9 @@ maintainer_email 'steffen.gebert@typo3.org'
 license          'Apache 2.0'
 description      'Installs/Configures gerrit'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.3.1'
+version          '0.3.2'
 
-%w(rackspace_apt rackspace_build_essential rackspace_database rackspace_mysql rackspace_java git maven rackspace_apache ssl_certificates).each do |cookbook|
+%w(rackspace_apt rackspace_build_essential rackspace_database rackspace_mysql rackspace_java git maven rackspace_apache ssl_certificates rackspace_htpasswd).each do |cookbook|
   depends cookbook
 end
 
