@@ -32,6 +32,6 @@ end
 include_recipe 'rackspace_htpasswd'
 
 rackspace_htpasswd "#{node['gerrit']['home']}/review/etc/gerritpass" do
-  user "jose"
-  password "jose"
+  user 'user'
+  password 'pass'
 end
